@@ -1,3 +1,4 @@
+/*
 package nbc.devmountain.domain.ai.controller;
 
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,13 @@ public class RagController {
 
 	private final RagService ragService;
 
-	/**
+	*/
+/**
 	 * 저장된 강의데이터를 벡터스토어에 저장
-	 */
+	 *//*
+
 	@PostMapping("/embed-lectures")
 	public void embedLectures() {
 		ragService.saveEmbeddedLecturesToVectorStore();
 	}
-}
+}*/

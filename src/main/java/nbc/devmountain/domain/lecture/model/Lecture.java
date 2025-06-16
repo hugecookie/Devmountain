@@ -43,7 +43,7 @@ public class Lecture {
 	@Column(nullable = false)
 	private LocalDateTime crawledAt;
 
-	@Column(name = "lecture_embedding", columnDefinition = "vector(1536)")
+/*	@Column(name = "lecture_embedding", columnDefinition = "vector(1536)")
 	@JdbcTypeCode(SqlTypes.VECTOR)
 	@Array(length = 1536)
 	@ColumnTransformer(
@@ -57,7 +57,7 @@ public class Lecture {
 	private float[] lectureEmbedding;
 
 	@Column(nullable = false)
-	private boolean isEmbedded = false;
+	private boolean isEmbedded = false;*/
 
 	@Builder
 	public Lecture(int itemId, String thumbnailUrl, String title, String instructor, String description,
@@ -83,9 +83,11 @@ public class Lecture {
 
 	}
 
+/*
 	public void setLectureEmbedding(float[] lectureEmbedding) {
 		this.lectureEmbedding = lectureEmbedding;
 		this.isEmbedded = true;
 	}
+*/
 
 }

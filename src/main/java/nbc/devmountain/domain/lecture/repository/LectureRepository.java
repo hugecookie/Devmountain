@@ -13,9 +13,6 @@ import nbc.devmountain.domain.lecture.model.Lecture;
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
 	void deleteByCrawledAtBefore(LocalDateTime today);
-
-	List<Lecture> findByIsEmbeddedFalse();
-
 	List<Lecture> findTop5ByTitleContainingIgnoreCaseOrDescriptionContainingIgnoreCase(String title,
 		String description);
 
