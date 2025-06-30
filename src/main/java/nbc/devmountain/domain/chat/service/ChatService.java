@@ -9,6 +9,7 @@ import org.springframework.web.socket.WebSocketSession;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
+
 import nbc.devmountain.common.util.security.SessionUser;
 import nbc.devmountain.domain.ai.service.LectureRecommendationService;
 import nbc.devmountain.domain.chat.dto.ChatMessageResponse;
@@ -61,6 +62,38 @@ public class ChatService {
 				aiMsg = aiResponse;
 			}
 			messageSender.sendMessageToRoom(roomId, aiMsg);
+
+		} else if (aiResponse.getMessageType() == MessageType.CHAT) {
+			// 일반 대화 메시지 처리
+			if (membershipType != User.MembershipLevel.GUEST) {
+				ChatMessageResponse aiMsg = chatMessageService.createAIMessage(roomId, aiResponse);
+				messageSender.sendMessageToRoom(roomId, aiMsg);
+			} else {
+				messageSender.sendMessageToRoom(roomId, aiResponse);
+			}
+		}
+	}
+
+	private void sendFollowupMessage(Long roomId, User.MembershipLevel membershipType, String followupMessage) {
+		try {
+			// followup 메시지 생성
+			ChatMessageResponse followupResponse = ChatMessageResponse.builder()
+				.message(followupMessage)
+				.isAiResponse(true)
+				.messageType(MessageType.CHAT)
+				.build();
+
+			// 회원인 경우 DB에 저장
+			if (membershipType != User.MembershipLevel.GUEST) {
+				ChatMessageResponse savedFollowup = chatMessageService.createAIMessage(roomId, followupResponse);
+				messageSender.sendMessageToRoom(roomId, savedFollowup);
+			} else {
+				messageSender.sendMessageToRoom(roomId, followupResponse);
+			}
+
+			log.info("추천 완료 후 followup 메시지 전송 완료: roomId={}", roomId);
+		} catch (Exception e) {
+			log.error("Followup 메시지 전송 실패: roomId={}, error={}", roomId, e.getMessage(), e);
 		}
 	}
 

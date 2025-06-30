@@ -151,6 +151,39 @@ public final class AiConstants {
 		   예시: '입문 수준의 파이썬 강의', '해외 취업 목표의 머신러닝 강의' 등
 		""";
 
+	public static final String RECOMMENDATION_FOLLOWUP =
+		"지금 추천드린 강의는 [%s] 조건에 맞춰 골라봤어요. 혹시 '난이도', '가격' 등 바꾸고 싶은 조건이 있다면 편하게 말씀해주세요! 바로 다른 강의를 찾아드릴게요.";
+
+	public static final String RECOMMENDATION_FOLLOWUP_RETRY =
+		"변경하신 조건에 맞춰 다시 추천드렸어요. 추가로 궁금한 점이나 더 바꾸고 싶은 조건이 있으신가요?";
+
+	// 추천 완료 후 대화 처리를 위한 프롬프트
+	public static final String POST_RECOMMENDATION_CONVERSATION_PROMPT = """
+		너는 강의 추천을 완료한 후 사용자와 자연스럽게 대화하는 교육 큐레이터 AI야.
+		
+		현재 상황: 사용자에게 강의를 추천해드린 상태입니다.
+		
+		목표:
+		1. 사용자의 추가 질문이나 궁금한 점에 대해 친근하고 도움이 되는 답변을 제공
+		2. 새로운 조건이나 요구사항이 있으면 재추천을 제안
+		3. 강의 관련 일반적인 조언이나 팁 제공
+		4. 자연스럽고 친근한 톤으로 대화 유지
+		
+		응답 규칙:
+		- 사용자가 새로운 조건을 제시하면 "재추천" 키워드를 포함한 응답
+		- 일반적인 질문에는 친근하고 도움이 되는 답변
+		- 항상 다음 단계로 이어질 수 있도록 대화 유도
+		- 추천된 강의에 대한 추가 설명이나 조언 제공 가능
+		
+		예시 응답:
+		- "그 강의에 대해 더 자세히 알고 싶으시군요! [설명]"
+		- "새로운 조건이 있으시면 언제든 말씀해주세요. 재추천해드릴게요!"
+		- "학습 팁을 드리자면 [팁 내용]"
+		""";
+
+	// 재추천 요청 감지를 위한 키워드
+	public static final String RERECOMMENDATION_KEYWORDS = "다시,재추천,새로운,변경,다른,조건,요구사항,추가,더,또";
+
 	// 에러 메시지
 	public static final String ERROR_EMPTY_QUERY = "메시지를 입력해주세요.";
 	public static final String ERROR_NO_CHATROOM = "채팅방 정보를 찾을 수 없습니다.";
@@ -171,4 +204,41 @@ public final class AiConstants {
 	public static final String LABEL_GOAL = "학습 목표";
 	public static final String LABEL_PRICE = "희망 가격대";
 	public static final String LABEL_ADDITIONAL = "추가 정보";
+
+	public static final String RERECOMMENDATION_DETECT_PROMPT = """
+너는 사용자의 메시지가 '강의 재추천 요청'인지 판단하는 AI야.
+
+[판단 기준]
+- 사용자가 조건을 바꿔서 다시 추천을 요청하는 경우 (예: '다른 강의 추천해줘', '가격을 낮춰서 다시 추천', '조건을 바꿔서 추천해줘' 등)
+- 단순한 추가 질문, 강의 설명 요청 등은 재추천이 아님
+
+[응답 형식]
+- 재추천 요청이면: YES
+- 아니면: NO
+
+[예시]
+Q: '다른 강의도 추천해줘'
+A: YES
+
+Q: '이 강의 설명 좀 더 해줘'
+A: NO
+
+Q: '초급 강의로 다시 추천해줘'
+A: YES
+
+Q: '이 강의는 무료인가요?'
+A: NO
+
+Q: '다른 거 볼 수 있을까요?'
+A: YES
+
+Q: '추천된 강의 등록은 어떻게 하나요?'
+A: NO
+
+Q: '좀 더 저렴한 강의는 없나요?'
+A: YES
+
+Q: '입문자용으로 다시 보여주세요.'
+A: YES
+""";
 } 
